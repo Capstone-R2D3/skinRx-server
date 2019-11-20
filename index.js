@@ -10,11 +10,12 @@ app.use(morgan('dev'))
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
+app.use('/api/products', require('./api/products')) 
+
 app.get('*', (req, res, next) => {
   res.sendFile(path.join(__dirname, './index.html'))
 })
 
-app.use('/api/products', require('./api/products')) 
 
 app.use((err, req, res, next) => {
   console.error(err, typeof next)
