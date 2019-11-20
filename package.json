@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start-server": "nodemon --watch server -e js,html server/index.js"
+    "start": "node index.js",
+    "start-server": "nodemon --watch server -e js,html server/index.js",
+    "deploy": ""
   },
   "dependencies": {
     "body-parser": "^1.19.0",

@@ -1,6 +1,7 @@
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
+const path = require('path')
 const http = require('http')
 const server = http.createServer(app);
 const { db } = require('./models/index')
@@ -9,6 +10,9 @@ app.use(morgan('dev'))
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
+app.get('*', (req, res, next) => {
+  res.sendFile(path.join(__dirname, './index.html'))
+})
 
 app.use('/api/products', require('./api/products')) 
 
@@ -19,7 +23,7 @@ app.use((err, req, res, next) => {
 })
 
  
-const PORT = 8080
+const PORT = process.env.PORT || 8080 
  
 async function startServer() {
  
