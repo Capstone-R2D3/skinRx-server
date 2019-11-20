@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "start-server": "nodemon --watch server -e js,html server/index.js",
+    "start-server": "nodemon --watch server -e js,html index.js",
     "deploy": ""
   },
   "dependencies": {
