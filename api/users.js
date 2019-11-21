@@ -30,6 +30,7 @@ const router = require('express').Router()
 router.get('/user', async (req, res, next) => {
   try {
     const user = await Users.findAll({where: {email: req.body.email}})
+    console.log('user')
     if (!user) {
       console.log('User does not exist')
       res.status(401).send('Wrong username and/or password')
