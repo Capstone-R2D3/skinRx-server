@@ -12,7 +12,11 @@ router.get('/', async (req, res, next) => {
 
 router.get('/login', async (req, res, next) => {
   try {
-    const user = await Users.findOne({where: {email: req.body.email}})
+    const user = await Users.findAll({
+      where: {
+        email: req.body.email.email
+      }
+    })
     if (!user) {
       console.log('No such user found:', req.body.email)
       res.status(401).send('Wrong username and/or password')
