@@ -14,14 +14,14 @@ router.get('/login', async (req, res, next) => {
   try {
     const user = await Users.findAll({
       where: {
-        email: req.body.email
+        email: req.body.data.email
       }
     })
     if (!user) {
-      console.log('No such user found:', req.body.email)
+      console.log('No such user found:', req.body.data.email)
       res.status(401).send('Wrong username and/or password')
-    } else if (user.password !== req.body.password) {
-      console.log('Incorrect password for user:', req.body.email)
+    } else if (user.password !== req.body.data.password) {
+      console.log('Incorrect password for user:', req.body.data.password)
       res.status(401).send('Wrong username and/or password')
     } else {
       // req.login(user, err => (err ? next(err) : res.json(user)))
