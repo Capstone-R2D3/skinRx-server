@@ -3,8 +3,7 @@ const Users = require('./models/users')
 const {db} = require('./models/index')
  
 const seedAllProducts = [
-   { name: 'Testing' },
-   { name: 'Name 2' },
+   { name: 'Moisturizer', brand: 'Drunk Elephant', organic: false },
 ]
 
 const seedUsers = [
