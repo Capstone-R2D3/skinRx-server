@@ -13,5 +13,5 @@ if (process.env.DATABASE_URL) {
 // const db = new Sequelize('postgres://localhost:5432/skinrx-server', { logging: false })
  
 module.exports = {
-   db
-  }
+   db, 
+}
