@@ -1,12 +1,14 @@
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
+const cors = require('cors')
 const path = require('path')
 const http = require('http')
 const server = http.createServer(app);
 const { db } = require('./models/index')
  
 app.use(morgan('dev'))
+app.use(cors())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
