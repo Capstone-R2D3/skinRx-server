@@ -10,7 +10,7 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.post('/login', async (req, res, next) => {
+router.get('/login', async (req, res, next) => {
   try {
     const user = await Users.findOne({where: {email: req.body.email}})
     if (!user) {
