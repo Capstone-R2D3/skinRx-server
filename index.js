@@ -10,7 +10,7 @@ app.use(morgan('dev'))
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
-app.use('/api', require('./api')) 
+app.use('/api', require('./api/index')) 
 
 app.get('*', (req, res, next) => {
   res.sendFile(path.join(__dirname, './index.html'))
