@@ -1,14 +1,14 @@
 const Users = require('../models/users')
 const router = require('express').Router()
 
-router.get('/', async (req, res, next) => {
-  try {
-    const users = await Users.findAll()
-    res.json(users)
-  } catch (error) {
-    next(error)
-  }
-})
+// router.get('/', async (req, res, next) => {
+//   try {
+//     const users = await Users.findAll()
+//     res.json(users)
+//   } catch (error) {
+//     next(error)
+//   }
+// })
 
 // router.post('/login', async (req, res, next) => {
 //   try {
@@ -27,7 +27,7 @@ router.get('/', async (req, res, next) => {
 //   }
 // })
 
-router.get('/login', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const user = await Users.findAll({where: {email: req.body.email}})
     if (!user) {
