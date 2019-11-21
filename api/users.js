@@ -27,7 +27,7 @@ const router = require('express').Router()
 //   }
 // })
 
-router.get('/', async (req, res, next) => {
+router.get('/user', async (req, res, next) => {
   try {
     const user = await Users.findAll({where: {email: req.body.email}})
     if (!user) {
