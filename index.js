@@ -1,22 +1,22 @@
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
+const cors = require('cors')
 const path = require('path')
 const http = require('http')
 const server = http.createServer(app);
 const { db } = require('./models/index')
  
 app.use(morgan('dev'))
+app.use(cors())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
-app.use('/api/products', require('./api/products')) 
-app.use('/auth', require('./auth'))
+app.use('/api', require('./api/index')) 
 
 app.get('*', (req, res, next) => {
   res.sendFile(path.join(__dirname, './index.html'))
 })
-
 
 app.use((err, req, res, next) => {
   console.error(err, typeof next)
@@ -29,7 +29,7 @@ const PORT = process.env.PORT || 8080
  
 async function startServer() {
  
-       await db.sync({force: true})
+       await db.sync()
        server.listen(PORT, () => {
            console.log(`server listening on port ${PORT}`)
        })  
