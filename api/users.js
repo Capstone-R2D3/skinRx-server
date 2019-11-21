@@ -1,6 +1,15 @@
 const Users = require('../models/users')
 const router = require('express').Router()
 
+router.get('/', async (req, res, next) => {
+  try {
+    const users = await Users.findAll()
+    res.json(users)
+  } catch (error) {
+    next(error)
+  }
+})
+
 router.post('/login', async (req, res, next) => {
   try {
     const user = await Users.findOne({where: {email: req.body.email}})
@@ -40,3 +49,5 @@ router.post('/logout', (req, res) => {
 router.get('/me', (req, res) => {
   res.json(req.user)
 })
+
+module.exports = router

@@ -10,8 +10,7 @@ app.use(morgan('dev'))
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
-app.use('/api', require('./api/products')) 
-app.use('/auth', require('./auth'))
+app.use('/api', require('./api')) 
 
 app.get('*', (req, res, next) => {
   res.sendFile(path.join(__dirname, './index.html'))
@@ -29,7 +28,7 @@ const PORT = process.env.PORT || 8080
  
 async function startServer() {
  
-       await db.sync({force: true})
+       await db.sync()
        server.listen(PORT, () => {
            console.log(`server listening on port ${PORT}`)
        })  
