@@ -8,7 +8,7 @@ if (process.env.DATABASE_URL) {
   });
 } else {
   // the application is executed on the local machine
-  db = new Sequelize('postgres://localhost:5432/skinrx-server');
+  db = new Sequelize('postgres://localhost:5432/skinrx-server', {  logging: false });
 }
 // const db = new Sequelize('postgres://localhost:5432/skinrx-server', { logging: false })
  
