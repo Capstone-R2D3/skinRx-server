@@ -14,7 +14,7 @@ router.get('/login', async (req, res, next) => {
   try {
     const user = await Users.findAll({
       where: {
-        email: req.body.email.email
+        email: req.body.email
       }
     })
     if (!user) {
