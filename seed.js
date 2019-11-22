@@ -1,5 +1,6 @@
 const Products = require('./models/products')
 const Users = require('./models/users')
+const ProductReviews = require('./models/productReviews')
 const {db} = require('./models/index')
  
 const seedAllProducts = [
@@ -12,12 +13,17 @@ const seedUsers = [
   { firstName: 'Athena', lastName: 'Chen', email: 'athena@gmail.com', password: '1234' },
   { firstName: 'Sylvana', lastName: 'Santos', email: 'sylvana@gmail.com', password: '1234' },
 ]
+
+const seedRatings = [
+  { userId: 1, productId: 1, rating: 5 }
+]
  
 async function seed() {
    try {
        await db.sync({force: true})
        await Products.bulkCreate(seedAllProducts)
        await Users.bulkCreate(seedUsers)
+       await ProductReviews.bulkCreate(seedRatings)
        await db.close()
        console.log('seeding successful!')
    } catch (error) {

@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize')
+let db;
 if (process.env.DATABASE_URL) {
   // the application is executed on Heroku ... use the postgres database
   db = new Sequelize(process.env.DATABASE_URL, {
@@ -11,7 +12,6 @@ if (process.env.DATABASE_URL) {
   db = new Sequelize('postgres://localhost:5432/skinrx-server', {  logging: false });
 }
 
-
 module.exports = {
-   db, 
+   db
 }
