@@ -11,4 +11,13 @@ router.get('/', async (req, res, next) => {
   }
 })
 
+router.post('/', async (req, res, next) => {
+  try {
+    const newProduct = await Products.create(req.body);
+    res.json(newProduct);
+  } catch (error) {
+    next(error)
+  }
+})
+
 module.exports = router
