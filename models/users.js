@@ -7,14 +7,14 @@ const Users = db.define('users', {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isEmpty: false
+      notEmpty: true
     }
   },
   lastName: {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isEmpty: false
+      notEmpty: true
     }
   },
   email: {
@@ -22,14 +22,14 @@ const Users = db.define('users', {
     allowNull: false,
     validate: {
       isEmail: true,
-      isEmpty: false
+      notEmpty: true,
     }
   },
   password: {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isEmpty: false
+      notEmpty: true
     },
     get() {
       return () => this.getDataValue('password')
