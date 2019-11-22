@@ -18,7 +18,7 @@ router.post('/signup', async (req, res, next) => {
       const user = await Users.create(req.body);
       res.json(user)
     } else {
-      res.status(401).send('User already exists');
+      res.send('User already exists');
     }
   } catch (err) {
       next(err)
@@ -30,10 +30,10 @@ router.post('/login', async (req, res, next) => {
     const user = await Users.findOne({ where: { email: req.body.email } });
     if (!user) {
       console.log('No such user found:', req.body.email);
-      res.status(401).send('Wrong username and/or password');
+      res.send('Wrong username and/or password');
     } else if (!user.correctPassword(req.body.password)) {
       console.log('Incorrect password for user:', req.body.email);
-      res.status(401).send('Wrong username and/or password');
+      res.send('Wrong username and/or password');
     } else {
       res.json(user)
     }
