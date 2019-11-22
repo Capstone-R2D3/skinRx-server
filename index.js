@@ -12,7 +12,9 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(compression())
 
-app.use('/api', require('./api/index')) 
+app.use('/api', require('./api/products'))
+app.use('/auth', require('./api/users')) 
+
 
 app.get('*', (req, res, next) => {
   res.sendFile(path.join(__dirname, './index.html'))
