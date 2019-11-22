@@ -1,9 +1,10 @@
 const Users = require('../models/users')
 const router = require('express').Router()
 
+// need to add security for only admin can view
 router.get('/users', async (req, res, next) => {
   try {
-    const users = Users.findAll()
+    const users = await Users.findAll()
     res.json(users)
   } catch (error) {
     next(error)
