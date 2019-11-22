@@ -39,7 +39,7 @@ let Athena = {
        name: 'Drunk Elephant'
      },
      userId: 2,
-     rating: 1
+     rating: 5
    },
    2: {
     productId: {
