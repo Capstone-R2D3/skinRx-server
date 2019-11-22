@@ -6,14 +6,16 @@ const http = require('http')
 const server = http.createServer(app);
 const compression = require('compression')
 const { db } = require('./models/index')
+const products = require('./api/products')
+const users = require('./api/users')
  
 app.use(morgan('dev'))
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(compression())
 
-app.use('/api', require('./api/products'))
-app.use('/auth', require('./api/users')) 
+app.use('/api', products)
+app.use('/auth', users) 
 
 
 app.get('*', (req, res, next) => {
