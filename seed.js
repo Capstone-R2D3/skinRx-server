@@ -1,10 +1,11 @@
-const Products = require('./models/products')
-const Users = require('./models/users')
-const ProductReviews = require('./models/productReviews')
+// get models from associations tab since we want the associations attached to each model 
+const {Users, Products, ProductReviews} = require('./models/associations')
 const {db} = require('./models/index')
  
 const seedAllProducts = [
    { name: 'Moisturizer', brand: 'Drunk Elephant', organic: false },
+   { name: 'Toner', brand: 'The Ordinary', organic: false }, 
+   { name: 'Cleanser', brand: 'Cetaphil', organic: false }
 ]
 
 const seedUsers = [
@@ -15,7 +16,9 @@ const seedUsers = [
 ]
 
 const seedRatings = [
-  { userId: 1, productId: 1, rating: 5 }
+  { userId: 1, productId: 1, rating: 5 },
+  { userId: 4, productId: 3, rating: 4 }, 
+  { userId: 2, productId: 1, rating: 2 }
 ]
  
 async function seed() {
