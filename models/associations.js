@@ -2,24 +2,13 @@ const Users = require('./users')
 const Products = require('./products')
 const ProductReviews = require('./productReviews')
 
-const Users = require('./users')
-const Products = require('./products')
 
-User.belongTo(Products)
+Products.belongsToMany(Users, { through: 'productReviews', unique: false })
+Users.belongsToMany(Products, { through: 'productReviews', unique: false })
+Users.hasMany(ProductReviews)
 
-
-Products.belongsToMany(Users, {
-  through: 'productReviews',
-  unique: false
-})
-
-User.hasMany(ProductReviews)
-ProductReviews.hasMany(Users)
-
-Users.belongsToMany(Products, {
-  through: 'productReviews',
-  unique: false
-})
+// Users.belongTo(Products)
+// ProductReviews.hasMany(Users)
 
 module.exports = {
   Users,
