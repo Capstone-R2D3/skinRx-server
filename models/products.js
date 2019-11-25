@@ -19,9 +19,6 @@ const Products = db.define('products', {
   category: {
     type: Sequelize.STRING, 
     // allowNull: false
-  }, 
-  ingredient_list: {
-    type: Sequelize.ARRAY(Sequelize.STRING)
   },
   imageUrl: {
     type: Sequelize.STRING,

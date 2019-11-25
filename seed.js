@@ -50,6 +50,10 @@ links.forEach((link, index) => {
     category = 'Toner'
   } else if (index > 5 && index < 9) {
     category = 'Moisturizer'
+  } else if (index > 8 && index <12) {
+    category = 'Serum'
+  } else if (index > 11) {
+    category = 'Mask'
   }
   scrapeProducts(link, category);
 });
