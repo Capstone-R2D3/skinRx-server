@@ -52,4 +52,4 @@ links.forEach((link, index) => {
     category = 'Moisturizer'
   }
   scrapeProducts(link, category);
-})
+});

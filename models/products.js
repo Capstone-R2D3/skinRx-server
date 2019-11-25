@@ -20,6 +20,9 @@ const Products = db.define('products', {
     type: Sequelize.STRING, 
     // allowNull: false
   }, 
+  ingredient_list: {
+    type: Sequelize.ARRAY(Sequelize.STRING)
+  },
   imageUrl: {
     type: Sequelize.STRING,
     defaultValue: 'https://screenshotlayer.com/images/assets/placeholder.png'
