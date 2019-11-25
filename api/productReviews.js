@@ -10,10 +10,13 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:productId', async (req, res, next) => {
   try {
     const rating = await ProductReviews.findAll({
-      where: { productId: req.params.id }
+      where: { 
+        productId: req.params.productId,
+        userId: req.body.userId
+      }
     })
     res.json(rating)
   } catch (error) {
@@ -28,6 +31,17 @@ router.post('/', async (req, res, next) => {
     } catch(error) {
         next(error)
     }
+})
+
+router.put('/:ratingId', async (req, res, next) => {
+  try {
+    const rating = await ProductReviews.findByPk({
+      where: {id: req.params.ratingId}
+    })
+    res.json(rating)
+  } catch (error) {
+    next(error)
+  }
 })
 
 module.exports = router
