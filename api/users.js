@@ -1,4 +1,4 @@
-const Users = require('../models/associations')
+const Users = require('../models/users')
 const router = require('express').Router()
 
 // need to add security for only admin can view

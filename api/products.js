@@ -1,4 +1,4 @@
-const Products = require('../models/associations')
+const Products = require('../models/products')
 const router = require('express').Router()
 
 router.get('/', async (req, res, next) => {
