@@ -10,12 +10,12 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.get('/:productId', async (req, res, next) => {
+router.get('/:userId/:productId', async (req, res, next) => {
   try {
     const rating = await ProductReviews.findAll({
       where: { 
         productId: req.params.productId,
-        userId: req.body.userId
+        userId: req.params.userId
       }
     })
     res.json(rating)
