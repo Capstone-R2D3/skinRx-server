@@ -13,7 +13,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   try {
-    const product = await Products.findByPk({
+    const product = await Products.findOne({
       where: { id: req.params.id }
     })
     res.json(product)
