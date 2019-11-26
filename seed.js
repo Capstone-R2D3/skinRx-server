@@ -4,15 +4,15 @@ const cheerio = require("cheerio");
 const request = require("request");
 
 const links = [
+  "https://www.ewg.org/skindeep/browse/category/Facial_cleanser?page=2&per_page=36",
   "https://www.ewg.org/skindeep/browse/category/Facial_cleanser?page=1&per_page=36",
-  "https://www.ewg.org/skindeep/browse/category/Facial_cleanser?page=9&per_page=36",
-  "https://www.ewg.org/skindeep/browse/category/Facial_cleanser?page=11&per_page=36",
-  "https://www.ewg.org/skindeep/browse/category/Toners__astringents?page=3&per_page=36",
+  "https://www.ewg.org/skindeep/browse/category/Facial_cleanser?page=3&per_page=36",
+  "https://www.ewg.org/skindeep/browse/category/Toners__astringents?id=Toners__astringents&per_page=36",
+  "https://www.ewg.org/skindeep/browse/category/Toners__astringents?page=2&per_page=36",
   "https://www.ewg.org/skindeep/browse/category/Toners__astringents?page=4&per_page=36",
-  "https://www.ewg.org/skindeep/browse/category/Toners__astringents?page=5&per_page=36",
-  "https://www.ewg.org/skindeep/browse/category/Facial_moisturizer__treatment?page=7&per_page=36",
-  "https://www.ewg.org/skindeep/browse/category/Facial_moisturizer__treatment?page=19&per_page=36",
-  "https://www.ewg.org/skindeep/browse/category/Facial_moisturizer__treatment?page=24&per_page=36",
+  "https://www.ewg.org/skindeep/browse/category/Facial_moisturizer__treatment?id=Facial_moisturizer__treatment&per_page=36",
+  "https://www.ewg.org/skindeep/browse/category/Facial_moisturizer__treatment?page=3&per_page=36",
+  "https://www.ewg.org/skindeep/browse/category/Facial_moisturizer__treatment?page=17&per_page=36",
   "https://www.ewg.org/skindeep/browse/category/Serums_&_Essences?page=5&per_page=36",
   "https://www.ewg.org/skindeep/browse/category/Serums_&_Essences?page=10&per_page=36",
   "https://www.ewg.org/skindeep/browse/category/Serums_&_Essences?page=16&per_page=36",
@@ -28,7 +28,6 @@ function scrapeProducts(url, category) {
     $(".product-tile").each((i, element) => {
       let skinTypeId = Math.ceil(Math.random() * 5);
       // console.log("randomly assigning to each product", skinTypeId);
-
       const brand = $(element)
         .find(".product-company")
         .children("a")
@@ -37,12 +36,14 @@ function scrapeProducts(url, category) {
         .find(".product-name")
         .children("a")
         .attr("href");
+
       request(productUrl, (err, res, b) => {
         if (err) {
           console.log(err);
         } else {
           const productPage = cheerio.load(b);
           const name = productPage(".product-name").text();
+          let imageUrl = productPage(".product-image").children("img").attr("src")
           const ingredients = [];
           productPage(".table-ingredient-concerns")
             .find("tr")
@@ -51,6 +52,11 @@ function scrapeProducts(url, category) {
                 .find(".td-ingredient-interior")
                 .children("a")
                 .text();
+              // imageUrl = productPage(elem)
+              // .find(".product-image")
+              // .children("img")
+              // .attr("src")
+              // console.log('image url!!!!!', imageUrl)
               const ingredientScore = String(
                 productPage(elem)
                   .find(".ingredient-score")
@@ -58,7 +64,7 @@ function scrapeProducts(url, category) {
               ).substring(52, 54);
               ingredients.push(`${ingredientName} : ${ingredientScore}`);
             });
-          Products.create({ brand, name, ingredients, category, skinTypeId });
+          Products.create({ brand, name, ingredients, category, skinTypeId, imageUrl });
         }
       });
     });

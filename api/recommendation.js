@@ -32,7 +32,8 @@ router.get('/:userId', async(req, res, next) =>{
 router.post('/:userId', async(req, res, next) => {
     try {
         const user = await Users.findByPk(req.params.userId);
-        const skinTypeId = user.skinTypeId;    
+        const skinTypeId = req.body.skinTypeId
+        // const skinTypeId = user.skinTypeId;    
 
         const cleanser = await Products.findAll({where: {category: 'Cleanser', skinTypeId}, limit: 1});
         const toner = await Products.findAll({where: {category: 'Toner', skinTypeId}, limit:1});
@@ -40,7 +41,8 @@ router.post('/:userId', async(req, res, next) => {
         const serum = await Products.findAll({where: {category: 'Serum', skinTypeId}, limit:1});
         const mask = await Products.findAll({where: {category: 'Mask', skinTypeId}, limit:1});
 
-        await Recommendations.create({
+        try {
+          await Recommendations.create({
             cleanser: cleanser[0].id, 
             toner: toner[0].id, 
             moisturizer: moisturizer[0].id, 
@@ -48,8 +50,10 @@ router.post('/:userId', async(req, res, next) => {
             mask: mask[0].id, 
             userId: req.params.userId
         })
-
-        res.json({cleanser, toner, moisturizer, serum, mask})
+          res.json({cleanser, toner, moisturizer, serum, mask})
+        } catch (error) {
+          next(error)
+        }
     } catch(error) {
         next(error)
     }

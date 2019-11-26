@@ -27,9 +27,9 @@ const Products = db.define('products', {
   ingredients: {
     type: Sequelize.ARRAY(Sequelize.STRING)
   }, 
-  // skinTypeId: {
-  //   type: Sequelize.INTEGER,
-  // }
+  skinTypeId: {
+    type: Sequelize.INTEGER,
+  }
 })
 
 module.exports = Products
