@@ -43,6 +43,53 @@ router.post('/users/:id/entries', async (req, res, next) => {
   }
 })
 
+router.get('/users/:id/entries', async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const allEntries = await JourneyEntries.findAll({
+            where: {
+                userId: id
+            },
+            order: [['date', 'DESC']]
+        });
+        res.json(allEntries);
+    } catch (error) {
+        next(error);
+    }
+})
+
+router.put('/users/:userId/entries/:entryId', async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    const entryId = req.params.entryId;
+    const updatedEntry = await JourneyEntries.update(req.body, {
+      where: {
+        id: entryId,
+        userId: userId
+      }
+    });
+    res.json(updatedEntry);
+  } catch (error) {
+    next(error);
+  }
+})
+
+router.delete('/users/:userId/entries/:entryId', async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    const entryId = req.params.entryId;
+    await JourneyEntries.destroy({
+      where: {
+        id: entryId,
+        userId: userId
+      }
+    });
+    res.status(200).send('Entry deleted!');
+  } catch (error) {
+    next(error);
+  }
+})
+
 router.post('/signup', async (req, res, next) => {
   try {
     const email = await Users.findOne({ where: { email: req.body.email } })
