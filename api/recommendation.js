@@ -40,7 +40,7 @@ router.post('/:userId', async(req, res, next) => {
         const serum = await Products.findAll({where: {category: 'Serum', skinTypeId}, limit:1});
         const mask = await Products.findAll({where: {category: 'Mask', skinTypeId}, limit:1});
 
-        Recommendations.create({
+        await Recommendations.create({
             cleanser: cleanser[0].id, 
             toner: toner[0].id, 
             moisturizer: moisturizer[0].id, 

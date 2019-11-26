@@ -33,15 +33,15 @@ router.post('/', async (req, res, next) => {
     }
 })
 
-router.put('/:ratingId', async (req, res, next) => {
-  try {
-    const rating = await ProductReviews.findByPk({
-      where: {id: req.params.ratingId}
-    })
-    res.json(rating)
-  } catch (error) {
-    next(error)
-  }
-})
+// router.put('/:ratingId', async (req, res, next) => {
+//   try {
+//     const rating = await ProductReviews.findByPk({
+//       where: {id: req.params.ratingId}
+//     })
+//     res.json(rating)
+//   } catch (error) {
+//     next(error)
+//   }
+// })
 
 module.exports = router
