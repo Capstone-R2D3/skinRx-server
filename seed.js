@@ -25,6 +25,10 @@ function scrapeProducts (url, category) {
     if(error) console.log(error)
     const $ = cheerio.load(body);
     $('.product-tile').each((i, element) => {
+        
+        let skinTypeId = Math.ceil(Math.random() * 5)
+        console.log('randomly assigning to each product', skinTypeId)
+
         const brand = $(element).find('.product-company').children('a').text();
         const productUrl = $(element).find('.product-name').children('a').attr('href');
         request(productUrl, (err, res, b) => {
@@ -36,7 +40,7 @@ function scrapeProducts (url, category) {
               const ingredientScore = String(productPage(elem).find('.ingredient-score').attr('src')).substring(52, 54);
               ingredients.push(`${ingredientName} : ${ingredientScore}`);
           });
-          Products.create({brand, name, ingredients, category});
+          Products.create({brand, name, ingredients, category, skinTypeId});
         })
     });
   })
@@ -44,6 +48,7 @@ function scrapeProducts (url, category) {
 
 links.forEach((link, index) => {
   let category;
+
   if (index < 3) {
     category = 'Cleanser'
   } else if (index > 2 && index < 6) {
@@ -55,5 +60,6 @@ links.forEach((link, index) => {
   } else if (index > 11) {
     category = 'Mask'
   }
+
   scrapeProducts(link, category);
 });

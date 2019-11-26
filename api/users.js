@@ -74,9 +74,30 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
-router.get('/me', (req, res, next) => {
+
+router.get('/me', (req, res) => {
   res.json(req.user);
 });
+
+
+router.put('/:id', async (req, res, next) => {
+  try {
+    // console.log('hi from server side')
+    // console.log('parameters', req.params)
+    // console.log(req.body.firstName, req.body.lastName, req.body.email)
+    // const user = await Users.update({
+    //   firstName: req.body.firstName, 
+    //   lastName: req.body.lastName, 
+    //   email: req.body.email, 
+    //   password: req.body.password,
+    // }, {where: { id: req.params.id }})
+
+    const user = await Users.update(req.body, {where: { id: req.params.id }})
+    res.json(user)
+  } catch(error) {
+    next(error)
+  }
+})
 
 
 module.exports = router
