@@ -2,6 +2,14 @@ const { Users, Products, ProductReviews, Recommendations } = require('../models/
 const router = require('express').Router();
 // const { euclideanDistance, getSameReviews } = require('../algo/index')
 
+router.get('/', async (req, res, next) => {
+  try {
+    const recs = await Recommendations.findAll()
+    res.json(recs)
+  } catch (error) {
+    next(error)
+  }
+})
 
 router.get('/:userId', async(req, res, next) =>{
     try {
