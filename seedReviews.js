@@ -14,7 +14,7 @@ const seedReviews = [
 
 async function seed() {
   try {
-      await db.sync({force: true})
+      await db.sync()
       await ProductReviews.bulkCreate(seedReviews)
       await db.close()
       console.log('database reset!')
