@@ -1,5 +1,5 @@
 // get models from associations tab since we want the associations attached to each model 
-const {Users, Products, ProductReviews, SkinTypes} = require('./models/associations')
+const {Users, Products, ProductReviews, SkinTypes, JourneyEntries} = require('./models/associations')
 const {db} = require('./models/index')
 
 const seedUsers = [
@@ -27,6 +27,10 @@ const seedReviews = [
   { userId: 3, productId: 1, rating: 5 }, 
   { userId: 3, productId: 3, rating: 2 },
 ]
+
+const seedJourneyEntries = [
+  { date: 'November 26, 2019', stressLevel: 4.5, diet: 'cookies', description: 'Skin is acting up. Hormones, stress, sugar.', userId: 3 }
+  ]
  
 async function seed() {
    try {
@@ -35,6 +39,7 @@ async function seed() {
        await Users.bulkCreate(seedUsers)
        await SkinTypes.bulkCreate(seedTypes)
        await ProductReviews.bulkCreate(seedReviews)
+       await JourneyEntries.bulkCreate(seedJourneyEntries)
        await db.close()
        console.log('database reset!')
    } catch (error) {

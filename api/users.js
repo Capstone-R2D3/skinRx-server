@@ -1,6 +1,7 @@
 const {Users} = require('../models/associations')
 const router = require('express').Router()
 const SkinTypes = require('../models/skin-types')
+const JourneyEntries = require('../models/journey-entries')
 
 // need to add security for only admin can view
 router.get('/users', async (req, res, next) => {
@@ -26,6 +27,18 @@ router.put('/users/:id', async (req, res, next) => {
     await user.save();
     res.json(user);
   } catch (error) {
+    next(error)
+  }
+})
+
+// req.body ----> {date, imageUrl, stressLevel, diet, description}
+router.post('/users/:id/entries', async (req, res, next) => {
+  try {
+    const newEntryInfo = req.body;
+    newEntryInfo.userId = req.params.id;
+    const newEntry = await JourneyEntries.create(newEntryInfo);
+    res.send(newEntry);
+  } catch (error) { 
     next(error)
   }
 })
