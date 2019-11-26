@@ -26,6 +26,9 @@ const Products = db.define('products', {
   },
   ingredients: {
     type: Sequelize.ARRAY(Sequelize.STRING)
+  }, 
+  skinTypeId: {
+    type: Sequelize.INTEGER,
   }
 })
 

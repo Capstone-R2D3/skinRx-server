@@ -20,11 +20,15 @@ const links = ['https://www.ewg.org/skindeep/browse/category/Facial_cleanser?pag
 'https://www.ewg.org/skindeep/browse/category/Mask?page=12&per_page=36'
 ]
 
-function scrapeProducts (url, category, skinTypesId) {
+function scrapeProducts (url, category) {
   request(url, (error, response, body) => {
     if(error) console.log(error)
     const $ = cheerio.load(body);
     $('.product-tile').each((i, element) => {
+        
+        let skinTypeId = Math.ceil(Math.random() * 5)
+        console.log('randomly assigning to each product', skinTypeId)
+
         const brand = $(element).find('.product-company').children('a').text();
         const productUrl = $(element).find('.product-name').children('a').attr('href');
         request(productUrl, (err, res, b) => {
@@ -36,7 +40,7 @@ function scrapeProducts (url, category, skinTypesId) {
               const ingredientScore = String(productPage(elem).find('.ingredient-score').attr('src')).substring(52, 54);
               ingredients.push(`${ingredientName} : ${ingredientScore}`);
           });
-          Products.create({brand, name, ingredients, category, skinTypesId});
+          Products.create({brand, name, ingredients, category, skinTypeId});
         })
     });
   })
@@ -44,8 +48,6 @@ function scrapeProducts (url, category, skinTypesId) {
 
 links.forEach((link, index) => {
   let category;
-
-  let skinTypesId = Math.floor(Math.random(1, 5))
 
   if (index < 3) {
     category = 'Cleanser'
@@ -59,5 +61,5 @@ links.forEach((link, index) => {
     category = 'Mask'
   }
 
-  scrapeProducts(link, category, skinTypesId);
+  scrapeProducts(link, category);
 });

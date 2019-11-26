@@ -1,11 +1,30 @@
-const Users = require('../models/users')
+const {Users} = require('../models/associations')
 const router = require('express').Router()
+const SkinTypes = require('../models/skin-types')
 
 // need to add security for only admin can view
 router.get('/users', async (req, res, next) => {
   try {
     const users = await Users.findAll()
     res.json(users)
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.put('/users/:id', async (req, res, next) => {
+  try {
+    const result = req.body.result;
+    const id = req.params.id;
+    let user = await Users.findByPk(id);
+    const skinType = await SkinTypes.findOne({
+      where: {
+        name: result
+      }
+    })
+    user.skinTypeId = skinType.id;
+    await user.save();
+    res.json(user);
   } catch (error) {
     next(error)
   }
