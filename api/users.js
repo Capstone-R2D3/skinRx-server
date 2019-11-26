@@ -53,11 +53,14 @@ router.put('/:id', async (req, res, next) => {
     // console.log('hi from server side')
     // console.log('parameters', req.params)
     // console.log(req.body.firstName, req.body.lastName, req.body.email)
-    const user = await Users.update({
-      firstName: req.body.firstName, 
-      lastName: req.body.lastName, 
-      email: req.body.email
-    }, {where: { id: req.params.id }})
+    // const user = await Users.update({
+    //   firstName: req.body.firstName, 
+    //   lastName: req.body.lastName, 
+    //   email: req.body.email, 
+    //   password: req.body.password,
+    // }, {where: { id: req.params.id }})
+
+    const user = await Users.update(req.body, {where: { id: req.params.id }})
     res.json(user)
   } catch(error) {
     next(error)

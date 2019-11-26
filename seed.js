@@ -20,7 +20,7 @@ const links = ['https://www.ewg.org/skindeep/browse/category/Facial_cleanser?pag
 'https://www.ewg.org/skindeep/browse/category/Mask?page=12&per_page=36'
 ]
 
-function scrapeProducts (url, category) {
+function scrapeProducts (url, category, skinTypesId) {
   request(url, (error, response, body) => {
     if(error) console.log(error)
     const $ = cheerio.load(body);
@@ -36,7 +36,7 @@ function scrapeProducts (url, category) {
               const ingredientScore = String(productPage(elem).find('.ingredient-score').attr('src')).substring(52, 54);
               ingredients.push(`${ingredientName} : ${ingredientScore}`);
           });
-          Products.create({brand, name, ingredients, category});
+          Products.create({brand, name, ingredients, category, skinTypesId});
         })
     });
   })
@@ -44,6 +44,9 @@ function scrapeProducts (url, category) {
 
 links.forEach((link, index) => {
   let category;
+
+  let skinTypesId = Math.floor(Math.random(1, 5))
+
   if (index < 3) {
     category = 'Cleanser'
   } else if (index > 2 && index < 6) {
@@ -55,5 +58,6 @@ links.forEach((link, index) => {
   } else if (index > 11) {
     category = 'Mask'
   }
-  scrapeProducts(link, category);
+
+  scrapeProducts(link, category, skinTypesId);
 });
