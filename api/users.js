@@ -1,4 +1,4 @@
-const Users = require('../models/users')
+const {Users} = require('../models/associations')
 const router = require('express').Router()
 const SkinTypes = require('../models/skin-types')
 
