@@ -33,15 +33,20 @@ router.post('/', async (req, res, next) => {
     }
 })
 
-// router.put('/:ratingId', async (req, res, next) => {
-//   try {
-//     const rating = await ProductReviews.findByPk({
-//       where: {id: req.params.ratingId}
-//     })
-//     res.json(rating)
-//   } catch (error) {
-//     next(error)
-//   }
-// })
+router.put('/add/:userId/:productId', async (req, res, next) => {
+  try {
+   await ProductReviews.update(
+    { rating: req.body.rating }, 
+    {
+     where: { userId: req.params.userId, productId: req.params.productId }
+   }) 
+   let userReview = ProductReviews.findOne({
+     where: { userId: req.params.userId, productId: req.params.productId }
+   })
+   res.json(userReview)
+  } catch (error) {
+    next(error)
+  }
+})
 
 module.exports = router
