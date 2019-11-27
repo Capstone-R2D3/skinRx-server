@@ -33,15 +33,16 @@ router.post('/', async (req, res, next) => {
     }
 })
 
-router.put('/add/:userId/:productId', async (req, res, next) => {
+router.put('/update', async (req, res, next) => {
   try {
+    console.log('server rating', req.body.rating)
    await ProductReviews.update(
     { rating: req.body.rating }, 
     {
-     where: { userId: req.params.userId, productId: req.params.productId }
+     where: { userId: req.body.userId, productId: req.body.productId }
    }) 
-   let userReview = ProductReviews.findOne({
-     where: { userId: req.params.userId, productId: req.params.productId }
+   let userReview = await ProductReviews.findOne({
+     where: { userId: req.body.userId, productId: req.body.productId }
    })
    res.json(userReview)
   } catch (error) {
