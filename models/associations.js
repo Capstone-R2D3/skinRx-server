@@ -10,6 +10,7 @@ Products.belongsToMany(Users, { through: 'productReviews', unique: false })
 Users.belongsToMany(Products, { through: 'productReviews', unique: false })
 
 Users.hasMany(ProductReviews)
+
 Users.belongsTo(SkinTypes)
 
 Products.belongsTo(SkinTypes)

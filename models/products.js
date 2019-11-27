@@ -22,7 +22,7 @@ const Products = db.define('products', {
   },
   imageUrl: {
     type: Sequelize.STRING,
-    defaultValue: 'https://screenshotlayer.com/images/assets/placeholder.png'
+    defaultValue: 'https://g.foolcdn.com/image/?url=https%3A%2F%2Fg.foolcdn.com%2Feditorial%2Fimages%2F518424%2Fskincare-products.jpg&w=700&op=resize'
   },
   ingredients: {
     type: Sequelize.ARRAY(Sequelize.STRING)
