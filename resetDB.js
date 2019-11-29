@@ -35,8 +35,8 @@ const seedJourneyEntries = [
 async function seed() {
    try {
        await db.sync({force: true})
-       await Users.bulkCreate(seedUsers)
        await SkinTypes.bulkCreate(seedTypes)
+       await Users.bulkCreate(seedUsers)
       //  await ProductReviews.bulkCreate(seedReviews)
        await JourneyEntries.bulkCreate(seedJourneyEntries)
        await db.close()
