@@ -2,15 +2,12 @@ const { Users, Products, ProductReviews, Recommendations } = require('../models/
 const router = require('express').Router();
 
 
+// finds similarity score between the two users 
 const euclideanDistance = (user1, user2) => {
   const n = user1.length
+  if (n === 0) return n
 
   let coefficient = 0
-
-  if (n === 0) {
-    return n
-  }
-
   for (let i = 0; i < n; i++) {
     coefficient += Math.pow(user1[i].rating - user2[i].rating, 2)
   }
@@ -54,12 +51,11 @@ const getSameReviews = (user1, user2) => {
     }
   })
 
-  let match = euclideanDistance(user1All, user2All)
-  console.log(match)
+  euclideanDistance(user1All, user2All)
 }
 
 
-
+// *** ROUTES START HERE ***
 
 // loading recommendations page for existing users 
 router.get('/:userId', async(req, res, next) => {
@@ -100,13 +96,15 @@ router.put('/:userId', async(req, res, next) => {
     const user1Products = await ProductReviews.findAll({where: {userId: req.params.userId}})
     const user2Products = await ProductReviews.findAll({where: {userId: similarRecs[1].userId}})
 
-    getSameReviews(user1Products, user2Products)    
+    let match = getSameReviews(user1Products, user2Products)    
 
-    // const user2Rating = similarRecs[1].rating
-    // let match = euclideanDistance(user1Rating, user2Rating)
-    // console.log(match)
+    // if match is above this score then give back other recommendations from user 2 with high ratings
+    if (match > 0.40) {
 
-    // res.send(similarRecs)
+    } else {
+
+    }
+
     res.send({user1Products, user2Products})
 
   } catch(error) {
