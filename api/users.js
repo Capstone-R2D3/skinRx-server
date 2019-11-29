@@ -5,17 +5,6 @@ const JourneyEntries = require('../models/journey-entries')
 
 // need to add security for only admin can view
 
-router.get('/:email', async (req, res, next) => {
-  try {
-    const user = await Users.findAll({
-      where: { email: req.params.email }
-    })
-  res.json(user);
-  } catch (error) {
-    next(error)
-  }
-  
-});
 
 router.get('/users', async (req, res, next) => {
   try {
@@ -25,6 +14,17 @@ router.get('/users', async (req, res, next) => {
     next(error)
   }
 })
+
+router.get('/:email', async (req, res, next) => {
+  try {
+    const user = await Users.findAll({
+      where: { email: req.params.email }
+    })
+  res.json(user);
+  } catch (error) {
+    next(error)
+  }
+});
 
 router.put('/users/:id', async (req, res, next) => {
   try {
