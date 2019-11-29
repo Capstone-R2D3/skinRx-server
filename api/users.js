@@ -122,8 +122,16 @@ router.post('/login', async (req, res, next) => {
 });
 
 
-router.get('/me', (req, res) => {
-  res.json(req.user);
+router.get('/me', async (req, res, next) => {
+  try {
+    const user = await Users.findAll({
+      where: { email: req.body.email }
+    })
+  res.json(user);
+  } catch (error) {
+    next(error)
+  }
+  
 });
 
 
