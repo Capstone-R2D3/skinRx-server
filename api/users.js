@@ -17,7 +17,6 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  // reject a file
   if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
     cb(null, true);
   } else {
@@ -33,6 +32,15 @@ const upload = multer({
   fileFilter: fileFilter
 });
 
+router.get('/users', async (req, res, next) => {
+  try {
+    const users = await Users.findAll()
+    res.json(users)
+  } catch (error) {
+    next(error)
+  }
+})
+
 router.get('/:email', async (req, res, next) => {
   try {
     const user = await Users.findAll({
@@ -42,17 +50,7 @@ router.get('/:email', async (req, res, next) => {
   } catch (error) {
     next(error)
   }
-  
 });
-
-router.get('/users', async (req, res, next) => {
-  try {
-    const users = await Users.findAll()
-    res.json(users)
-  } catch (error) {
-    next(error)
-  }
-})
 
 router.put('/users/:id', async (req, res, next) => {
   try {
