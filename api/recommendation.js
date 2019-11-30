@@ -109,7 +109,7 @@ router.put('/:userId', async(req, res, next) => {
       
       console.log(match)
       
-      if(match >= 0.39) {
+      if(match >= 0.35) {
         let remainingArr = getSameReviews(user1Products, user2Products)[1];
         for(let i = 0; i < remainingArr.length; i++) {
           if(remainingArr[i].rating > 3) recommendProds.push(remainingArr[i].productId);
@@ -119,13 +119,19 @@ router.put('/:userId', async(req, res, next) => {
 
     console.log(recommendProds)
     
+
     for(let i = 0; i < recommendProds.length; i++) {
       let productsToRecommend = await Products.findByPk(recommendProds[i]);
       
       console.log(productsToRecommend.category)
       
+      // DEF NEED TO REFACTOR THIS BIT - DOES ANYONE KNOW IF I CAN JUST PASS IN A VARIABLE 
+      // IN PLACE OF THE ACTUAL COLUMN NAME? THAT WOULD MAKE IT MUCH CLEANER!!!!!
       if(productsToRecommend['category'] === category) {
-        await Recommendations.update({cleanser: recommendProds[i]}, {where: { userId: req.params.userId } })
+        if(category === 'Cleanser') await Recommendations.update({cleanser: recommendProds[i]}, {where: { userId: req.params.userId } });
+        else if(category === 'Toner') await Recommendations.update({toner: recommendProds[i]}, {where: { userId: req.params.userId } });
+        else if(category === 'Serum') await Recommendations.update({serum: recommendProds[i]}, {where: { userId: req.params.userId } });
+        else if(category === 'Moisturizer') await Recommendations.update({moisturizer: recommendProds[i]}, {where: { userId: req.params.userId } });
       }
     }
 
