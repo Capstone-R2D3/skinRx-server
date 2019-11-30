@@ -10,6 +10,7 @@ const seedReviews = [
   { userId: 2, productId: 5, rating: 5 }, 
   { userId: 3, productId: 1, rating: 5 }, 
   { userId: 3, productId: 3, rating: 2 },
+  { userId: 3, productId: 31, rating: 5 }
 ]
 
 async function seed() {

@@ -106,6 +106,7 @@ router.put('/:userId', async(req, res, next) => {
     for(let i = 1; i < similarRecs.length; i++) {
       user2Products = await ProductReviews.findAll({where: {userId: similarRecs[i].userId}})
       let match = getSameReviews(user1Products, user2Products)[0]
+      
       console.log(match)
       
       if(match >= 0.39) {
@@ -117,11 +118,13 @@ router.put('/:userId', async(req, res, next) => {
     }
 
     console.log(recommendProds)
+    
     for(let i = 0; i < recommendProds.length; i++) {
       let productsToRecommend = await Products.findByPk(recommendProds[i]);
+      
       console.log(productsToRecommend.category)
+      
       if(productsToRecommend['category'] === category) {
-        console.log(userId)
         await Recommendations.update({cleanser: recommendProds[i]}, {where: { userId: req.params.userId } })
       }
     }
