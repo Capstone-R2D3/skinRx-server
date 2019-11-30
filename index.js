@@ -13,6 +13,7 @@ app.use(morgan('dev'))
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(compression())
+app.use('/uploads', express.static('uploads'));
 
 app.use('/api', apiRouter)
 app.use('/auth', users) 
