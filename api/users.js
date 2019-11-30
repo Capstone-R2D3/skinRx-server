@@ -4,6 +4,19 @@ const SkinTypes = require('../models/skin-types')
 const JourneyEntries = require('../models/journey-entries')
 
 // need to add security for only admin can view
+
+router.get('/:email', async (req, res, next) => {
+  try {
+    const user = await Users.findAll({
+      where: { email: req.params.email }
+    })
+  res.json(user);
+  } catch (error) {
+    next(error)
+  }
+  
+});
+
 router.get('/users', async (req, res, next) => {
   try {
     const users = await Users.findAll()
@@ -121,10 +134,6 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
-
-router.get('/me', (req, res) => {
-  res.json(req.user);
-});
 
 
 router.put('/:id', async (req, res, next) => {
