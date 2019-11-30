@@ -51,7 +51,13 @@ const getSameReviews = (user1, user2) => {
     }
   })
 
-  euclideanDistance(user1All, user2All)
+  let user2Remaining = user2.filter(review => {
+    if (!(sameReviews.includes(review.productId))) {
+      return review
+    }
+  })
+
+  return [euclideanDistance(user1All, user2All), user2Remaining]
 }
 
 
@@ -92,20 +98,35 @@ router.put('/:userId', async(req, res, next) => {
     const user1Rating = 4
 
     const similarRecs = await ProductReviews.findAll({ where: { productId: productId }, limit: 5 })
-    
+
     const user1Products = await ProductReviews.findAll({where: {userId: req.params.userId}})
-    const user2Products = await ProductReviews.findAll({where: {userId: similarRecs[1].userId}})
+    let user2Products
+    let recommendProds = []
 
-    let match = getSameReviews(user1Products, user2Products)    
-
-    // if match is above this score then give back other recommendations from user 2 with high ratings
-    if (match > 0.40) {
-
-    } else {
-
+    for(let i = 1; i < similarRecs.length; i++) {
+      user2Products = await ProductReviews.findAll({where: {userId: similarRecs[i].userId}})
+      let match = getSameReviews(user1Products, user2Products)[0]
+      console.log(match)
+      
+      if(match >= 0.39) {
+        let remainingArr = getSameReviews(user1Products, user2Products)[1];
+        for(let i = 0; i < remainingArr.length; i++) {
+          if(remainingArr[i].rating > 3) recommendProds.push(remainingArr[i].productId);
+        }
+      }
     }
 
-    res.send({user1Products, user2Products})
+    console.log(recommendProds)
+    for(let i = 0; i < recommendProds.length; i++) {
+      let productsToRecommend = await Products.findByPk(recommendProds[i]);
+      console.log(productsToRecommend.category)
+      if(productsToRecommend['category'] === category) {
+        console.log(userId)
+        await Recommendations.update({cleanser: recommendProds[i]}, {where: { userId: req.params.userId } })
+      }
+    }
+
+    res.send('hi')
 
   } catch(error) {
     next(error)
@@ -147,3 +168,37 @@ router.post('/:userId', async(req, res, next) => {
 })
 
 module.exports = router;
+
+
+
+
+// router.put('/:userId', async(req, res, next) => {
+//   try {
+    
+//     // will be passed in through the product card in the body
+//     const category = req.body.category; 
+//     const productId = req.body.productId;
+//     const skinTypeId = req.body.skinTypeId;
+//     // const user1Rating = req.body.rating;
+//     const user1Rating = 4
+
+//     const similarRecs = await ProductReviews.findAll({ where: { productId: productId }, limit: 5 })
+    
+//     const user1Products = await ProductReviews.findAll({where: {userId: req.params.userId}})
+//     const user2Products = await ProductReviews.findAll({where: {userId: similarRecs[1].userId}})
+
+//     let match = getSameReviews(user1Products, user2Products)    
+
+//     // if match is above this score then give back other recommendations from user 2 with high ratings
+//     if (match > 0.40) {
+
+//     } else {
+
+//     }
+
+//     res.send({user1Products, user2Products})
+
+//   } catch(error) {
+//     next(error)
+//   }
+// })
