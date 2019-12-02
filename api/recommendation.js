@@ -135,7 +135,9 @@ router.put('/:userId', async(req, res, next) => {
       }
     }
 
-    res.send('hi')
+    let newRecommendations = await Recommendations.findByPk(req.params.userId)
+
+    res.send(newRecommendations)
 
   } catch(error) {
     next(error)
