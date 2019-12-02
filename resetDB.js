@@ -2,19 +2,19 @@
 const {Users, Products, ProductReviews, SkinTypes, JourneyEntries} = require('./models/associations')
 const {db} = require('./models/index')
 
-const seedUsers = [
-  { firstName: 'Andi', lastName: 'Plummer', email: 'andi@gmail.com', password: '1234' },
-  { firstName: 'Grace', lastName: 'Chung', email: 'grace@gmail.com', password: '1234' },
-  { firstName: 'Athena', lastName: 'Chen', email: 'athena@gmail.com', password: '1234' },
-  { firstName: 'Sylvana', lastName: 'Santos', email: 'sylvana@gmail.com', password: '1234' },
-]
-
 const seedTypes = [
   { name: 'Oily' },
   { name: 'Dry' },
   { name: 'Combination' },
   { name: 'Normal' },
   { name: 'Sensitive' }
+]
+
+const seedUsers = [
+  { firstName: 'Andi', lastName: 'Plummer', email: 'andi@gmail.com', password: '1234', skinTypeId: 1},
+  { firstName: 'Grace', lastName: 'Chung', email: 'grace@gmail.com', password: '1234', skinTypeId: 2},
+  { firstName: 'Athena', lastName: 'Chen', email: 'athena@gmail.com', password: '1234', skinTypeId: 3},
+  { firstName: 'Sylvana', lastName: 'Santos', email: 'sylvana@gmail.com', password: '1234', skinTypeId: 4},
 ]
 
 // const seedReviews = [
@@ -35,8 +35,8 @@ const seedJourneyEntries = [
 async function seed() {
    try {
        await db.sync({force: true})
-       await Users.bulkCreate(seedUsers)
        await SkinTypes.bulkCreate(seedTypes)
+       await Users.bulkCreate(seedUsers)
       //  await ProductReviews.bulkCreate(seedReviews)
        await JourneyEntries.bulkCreate(seedJourneyEntries)
        await db.close()

@@ -1,68 +1,68 @@
-// let Andi = {
-//   name: 'Andi',
-//   email: 'andi@gmail.com',
-//   productReviews: {
-//     1 : {
-//       productId: {
-//         id: 1,
-//         name: 'Drunk Elephant'
-//       },
-//       userId: 1,
-//       rating: 4
-//     },
-//     2: {
-//       productId: {
-//         id: 2,
-//         name: 'The Ordinary'
-//       },     
-//       userId: 1,
-//      rating: 5
-//     },
-//     3: {
-//       productId: {
-//         id: 5,
-//         name: 'Farmacy'
-//       },       
-//       userId: 1,
-//       rating: 5
-//     }
-//   }
-// }
+let Andi = {
+  name: 'Andi',
+  email: 'andi@gmail.com',
+  productReviews: {
+    1 : {
+      productId: {
+        id: 1,
+        name: 'Drunk Elephant'
+      },
+      userId: 1,
+      rating: 4
+    },
+    2: {
+      productId: {
+        id: 2,
+        name: 'The Ordinary'
+      },     
+      userId: 1,
+     rating: 5
+    },
+    // 3: {
+    //   productId: {
+    //     id: 5,
+    //     name: 'Farmacy'
+    //   },       
+    //   userId: 1,
+    //   rating: 5
+    // }
+  }
+}
 
-// let Athena = {
-//   name: 'Athena',
-//   email: 'athena@gmail.com',
-//   productReviews: {
-//    1 : {
-//      productId: {
-//        id: 1,
-//        name: 'Drunk Elephant'
-//      },
-//      userId: 2,
-//      rating: 5
-//    },
-//    2: {
-//     productId: {
-//       id: 2,
-//       name: 'The Ordinary'
-//     },     
-//     userId: 2,
-//     rating: 4
-//    },
-//    3: {
-//     productId: {
-//       id: 3,
-//       name: 'Cetaphil'
-//     }, 
-//     userId: 1,
-//     rating: 5
-//     }
-//   }
-// }
+let Athena = {
+  name: 'Athena',
+  email: 'athena@gmail.com',
+  productReviews: {
+   1 : {
+     productId: {
+       id: 1,
+       name: 'Drunk Elephant'
+     },
+     userId: 2,
+     rating: 5
+   },
+   2: {
+    productId: {
+      id: 2,
+      name: 'The Ordinary'
+    },     
+    userId: 2,
+    rating: 3
+   },
+  //  3: {
+  //   productId: {
+  //     id: 3,
+  //     name: 'Cetaphil'
+  //   }, 
+  //   userId: 1,
+  //   rating: 5
+  //   }
+  }
+}
 
 // testing for similarity score 
 // users will always have same array length and same product names
-function euclideanDistance (user1, user2) {
+const euclideanDistance = (user1, user2) => {
   const n = user1.length
 
   let coefficient = 0
@@ -79,7 +79,7 @@ function euclideanDistance (user1, user2) {
 }
 
 // compares both users and returns array of product ids they both have reviews for 
-function getSameReviews(user1, user2) {
+const getSameReviews = (user1, user2) => {
   let user1Reviews = []
   for (let key in user1.productReviews) {
     user1.productReviews[key].productId['rating'] = user1.productReviews[key].rating
@@ -115,4 +115,4 @@ function getSameReviews(user1, user2) {
 
 }
 
-// console.log(getSameReviews(Andi, Athena))
+console.log(getSameReviews(Andi, Athena))
