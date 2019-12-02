@@ -70,16 +70,21 @@ router.put('/users/:id', async (req, res, next) => {
   }
 })
 
-router.post('/users/:id/entries', upload.single('entryImage'), async (req, res, next) => {
+router.post('/users/:id/entries', upload.array('entryImages'), async (req, res, next) => {
   try {
+    let imageUrlsArray = [];
+    for(let i=0; i < req.files.length; i++){
+      const imageUrl = url.format({
+        protocol: req.protocol,
+        host: req.get('host'),
+        pathname: req.files[i].path
+      });
+      imageUrlsArray.push(imageUrl);
+    }
     const newEntryInfo = {
       userId: req.params.id,
       date: req.body.date,
-      imageUrl: url.format({
-        protocol: req.protocol,
-        host: req.get('host'),
-        pathname: req.file.path
-      }),
+      imageUrls: imageUrlsArray,
       stressLevel: Number(req.body.stressLevel),
       diet: req.body.diet,
       description: req.body.description
@@ -106,17 +111,22 @@ router.get('/users/:id/entries', async (req, res, next) => {
     }
 })
 
-router.put('/users/:userId/entries/:entryId', upload.single('entryImage'), async (req, res, next) => {
+router.put('/users/:userId/entries/:entryId', upload.array('entryImages'), async (req, res, next) => {
   try {
+    let imageUrlsArray = [];
+    for(let i=0; i < req.files.length; i++){
+      const imageUrl = url.format({
+        protocol: req.protocol,
+        host: req.get('host'),
+        pathname: req.files[i].path
+      });
+      imageUrlsArray.push(imageUrl);
+    }
     const userId = req.params.userId;
     const entryId = req.params.entryId;
     const updatedEntryInfo = {
       date: req.body.date,
-      imageUrl: url.format({
-        protocol: req.protocol,
-        host: req.get('host'),
-        pathname: req.file.path
-      }),
+      imageUrls: imageUrlsArray,
       stressLevel: Number(req.body.stressLevel),
       diet: req.body.diet,
       description: req.body.description

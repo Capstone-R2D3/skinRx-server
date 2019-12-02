@@ -6,9 +6,8 @@ const JourneyEntries = db.define('journeyEntries', {
         type: Sequelize.STRING,
         allowNull: false
     },
-    imageUrl: {
-        type: Sequelize.STRING,
-        defaultValue: 'https://cdn.imgbin.com/14/2/14/imgbin-cartoon-girl-skin-care-mask-7TXRD4K1yKn7iYbCgwzQWuqng.jpg'
+    imageUrls: {
+        type: Sequelize.ARRAY(Sequelize.STRING),
     },
     stressLevel: {
         type: Sequelize.FLOAT,
