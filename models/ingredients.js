@@ -4,9 +4,17 @@ const {db} = require('./index')
 const Ingredients = db.define('ingredients', {
   name: {
     type: Sequelize.STRING,
-    allowNull: false, 
+    allowNull: false
+  },
+  toxicity: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  data: {
+    type: Sequelize.STRING,
+    allowNull: false,
     validate: {
-      notEmpty: true
+      isIn: [['None', 'Limited', 'Fair', 'Good', 'Robust']]
     }
   }
 })

@@ -2,19 +2,34 @@ const {Users} = require('../models/associations')
 const router = require('express').Router()
 const SkinTypes = require('../models/skin-types')
 const JourneyEntries = require('../models/journey-entries')
+const multer = require('multer');
+const url = require('url');
 
 // need to add security for only admin can view
 
-router.get('/:email', async (req, res, next) => {
-  try {
-    const user = await Users.findAll({
-      where: { email: req.params.email }
-    })
-  res.json(user);
-  } catch (error) {
-    next(error)
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, './uploads/');
+  },
+  filename: function(req, file, cb) {
+    cb(null, new Date().toISOString() + file.originalname);
   }
-  
+});
+
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 20
+  },
+  fileFilter: fileFilter
 });
 
 router.get('/users', async (req, res, next) => {
@@ -25,6 +40,17 @@ router.get('/users', async (req, res, next) => {
     next(error)
   }
 })
+
+router.get('/:email', async (req, res, next) => {
+  try {
+    const user = await Users.findAll({
+      where: { email: req.params.email }
+    })
+  res.json(user);
+  } catch (error) {
+    next(error)
+  }
+});
 
 router.put('/users/:id', async (req, res, next) => {
   try {
@@ -44,11 +70,25 @@ router.put('/users/:id', async (req, res, next) => {
   }
 })
 
-// req.body ----> {date, imageUrl, stressLevel, diet, description}
-router.post('/users/:id/entries', async (req, res, next) => {
+router.post('/users/:id/entries', upload.array('entryImages'), async (req, res, next) => {
   try {
-    const newEntryInfo = req.body;
-    newEntryInfo.userId = req.params.id;
+    let imageUrlsArray = [];
+    for(let i=0; i < req.files.length; i++){
+      const imageUrl = url.format({
+        protocol: req.protocol,
+        host: req.get('host'),
+        pathname: req.files[i].path
+      });
+      imageUrlsArray.push(imageUrl);
+    }
+    const newEntryInfo = {
+      userId: req.params.id,
+      date: req.body.date,
+      imageUrls: imageUrlsArray,
+      stressLevel: Number(req.body.stressLevel),
+      diet: req.body.diet,
+      description: req.body.description
+    }
     const newEntry = await JourneyEntries.create(newEntryInfo);
     res.send(newEntry);
   } catch (error) { 
@@ -71,17 +111,35 @@ router.get('/users/:id/entries', async (req, res, next) => {
     }
 })
 
-router.put('/users/:userId/entries/:entryId', async (req, res, next) => {
+router.put('/users/:userId/entries/:entryId', upload.array('entryImages'), async (req, res, next) => {
   try {
+    let imageUrlsArray = [];
+    for(let i=0; i < req.files.length; i++){
+      const imageUrl = url.format({
+        protocol: req.protocol,
+        host: req.get('host'),
+        pathname: req.files[i].path
+      });
+      imageUrlsArray.push(imageUrl);
+    }
     const userId = req.params.userId;
     const entryId = req.params.entryId;
-    const updatedEntry = await JourneyEntries.update(req.body, {
+    const updatedEntryInfo = {
+      date: req.body.date,
+      imageUrls: imageUrlsArray,
+      stressLevel: Number(req.body.stressLevel),
+      diet: req.body.diet,
+      description: req.body.description
+    }
+    const [numRows, rows] = await JourneyEntries.update(updatedEntryInfo, {
       where: {
         id: entryId,
         userId: userId
-      }
+      },
+      returning: true,
+      plain: true
     });
-    res.json(updatedEntry);
+    res.json(rows);
   } catch (error) {
     next(error);
   }
