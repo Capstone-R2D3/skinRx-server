@@ -196,8 +196,9 @@ router.post('/login', async (req, res, next) => {
 
 router.put('/:id', async (req, res, next) => {
   try {
-    const user = await Users.update(req.body, {where: { id: req.params.id }})
-    res.json(user)
+    const user = await Users.findByPk(req.params.id) 
+    const data = await user.update(req.body)
+    res.json(data)
   } catch(error) {
     next(error)
   }
