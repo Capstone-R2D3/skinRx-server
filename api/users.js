@@ -62,7 +62,8 @@ router.put('/users/:userId/entries/:entryId', async (req, res, next) => {
   try {
     const userId = req.params.userId;
     const entryId = req.params.entryId;
-    const updatedEntry = await JourneyEntries.update(req.body, {
+    const infoToUpdate = req.body;
+    const updatedEntry = await JourneyEntries.update(infoToUpdate, {
       where: {
         id: entryId,
         userId: userId
