@@ -21,8 +21,8 @@ Users.hasOne(Recommendations)
 Users.hasMany(JourneyEntries)
 JourneyEntries.belongsTo(Users)
 
-Ingredients.belongsToMany(Products, { through: 'productIngredients' })
-Products.belongsToMany(Ingredients, { through: 'productIngredients' })
+Ingredients.belongsToMany(Products, { through: 'productIngredients', as: 'ingreds' })
+Products.belongsToMany(Ingredients, { through: 'productIngredients', as: 'ingreds' })
 
 module.exports = {
   Users,
