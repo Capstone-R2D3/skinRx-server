@@ -1,4 +1,4 @@
-const Ingredients = require('./model/ingredients');
+const Ingredients = require('./models/associations');
 const cheerio = require('cheerio');
 const request = require('request');
 
