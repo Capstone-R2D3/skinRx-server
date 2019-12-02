@@ -2,15 +2,12 @@ const { Users, Products, ProductReviews, Recommendations } = require('../models/
 const router = require('express').Router();
 
 
+// finds similarity score between the two users 
 const euclideanDistance = (user1, user2) => {
   const n = user1.length
+  if (n === 0) return n
 
   let coefficient = 0
-
-  if (n === 0) {
-    return n
-  }
-
   for (let i = 0; i < n; i++) {
     coefficient += Math.pow(user1[i].rating - user2[i].rating, 2)
   }
@@ -54,12 +51,17 @@ const getSameReviews = (user1, user2) => {
     }
   })
 
-  let match = euclideanDistance(user1All, user2All)
-  console.log(match)
+  let user2Remaining = user2.filter(review => {
+    if (!(sameReviews.includes(review.productId))) {
+      return review
+    }
+  })
+
+  return [euclideanDistance(user1All, user2All), user2Remaining]
 }
 
 
-
+// *** ROUTES START HERE ***
 
 // loading recommendations page for existing users 
 router.get('/:userId', async(req, res, next) => {
@@ -96,18 +98,46 @@ router.put('/:userId', async(req, res, next) => {
     const user1Rating = 4
 
     const similarRecs = await ProductReviews.findAll({ where: { productId: productId }, limit: 5 })
-    
+
     const user1Products = await ProductReviews.findAll({where: {userId: req.params.userId}})
-    const user2Products = await ProductReviews.findAll({where: {userId: similarRecs[1].userId}})
+    let user2Products
+    let recommendProds = []
 
-    getSameReviews(user1Products, user2Products)    
+    for(let i = 1; i < similarRecs.length; i++) {
+      user2Products = await ProductReviews.findAll({where: {userId: similarRecs[i].userId}})
+      let match = getSameReviews(user1Products, user2Products)[0]
+      
+      console.log(match)
+      
+      if(match >= 0.35) {
+        let remainingArr = getSameReviews(user1Products, user2Products)[1];
+        for(let i = 0; i < remainingArr.length; i++) {
+          if(remainingArr[i].rating > 3) recommendProds.push(remainingArr[i].productId);
+        }
+      }
+    }
 
-    // const user2Rating = similarRecs[1].rating
-    // let match = euclideanDistance(user1Rating, user2Rating)
-    // console.log(match)
+    console.log(recommendProds)
+    
 
-    // res.send(similarRecs)
-    res.send({user1Products, user2Products})
+    for(let i = 0; i < recommendProds.length; i++) {
+      let productsToRecommend = await Products.findByPk(recommendProds[i]);
+      
+      console.log(productsToRecommend.category)
+      
+      // DEF NEED TO REFACTOR THIS BIT - DOES ANYONE KNOW IF I CAN JUST PASS IN A VARIABLE 
+      // IN PLACE OF THE ACTUAL COLUMN NAME? THAT WOULD MAKE IT MUCH CLEANER!!!!!
+      if(productsToRecommend['category'] === category) {
+        if(category === 'Cleanser') await Recommendations.update({cleanser: recommendProds[i]}, {where: { userId: req.params.userId } });
+        else if(category === 'Toner') await Recommendations.update({toner: recommendProds[i]}, {where: { userId: req.params.userId } });
+        else if(category === 'Serum') await Recommendations.update({serum: recommendProds[i]}, {where: { userId: req.params.userId } });
+        else if(category === 'Moisturizer') await Recommendations.update({moisturizer: recommendProds[i]}, {where: { userId: req.params.userId } });
+      }
+    }
+
+    let newRecommendations = await Recommendations.findByPk(req.params.userId)
+
+    res.send(newRecommendations)
 
   } catch(error) {
     next(error)
@@ -149,3 +179,37 @@ router.post('/:userId', async(req, res, next) => {
 })
 
 module.exports = router;
+
+
+
+
+// router.put('/:userId', async(req, res, next) => {
+//   try {
+    
+//     // will be passed in through the product card in the body
+//     const category = req.body.category; 
+//     const productId = req.body.productId;
+//     const skinTypeId = req.body.skinTypeId;
+//     // const user1Rating = req.body.rating;
+//     const user1Rating = 4
+
+//     const similarRecs = await ProductReviews.findAll({ where: { productId: productId }, limit: 5 })
+    
+//     const user1Products = await ProductReviews.findAll({where: {userId: req.params.userId}})
+//     const user2Products = await ProductReviews.findAll({where: {userId: similarRecs[1].userId}})
+
+//     let match = getSameReviews(user1Products, user2Products)    
+
+//     // if match is above this score then give back other recommendations from user 2 with high ratings
+//     if (match > 0.40) {
+
+//     } else {
+
+//     }
+
+//     res.send({user1Products, user2Products})
+
+//   } catch(error) {
+//     next(error)
+//   }
+// })
