@@ -1,4 +1,4 @@
-const Ingredients = require('../models/assocations');
+const Ingredients = require('../models/associations');
 const router = require('express').Router();
 
 router.get('/', async (req, res, next) => {
