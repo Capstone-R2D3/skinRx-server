@@ -10,21 +10,33 @@ const router = require('express').Router();
 //     }
 // })
 
-router.post('/', (req, res, next) => {
+router.post('/', async (req, res, next) => {
     try {
-        const ingredientsToFind = req.body;
-        const ingredientsData = ingredientsToFind.reduce(async (accum, ingredient) => {
-            const data = await Ingredients.findOne({
+        const {ingredientsToFind} = req.body;
+        console.log('INGREDIENTS TO FIND: ', ingredientsToFind);
+        let ingredientsData = [];
+        for (let i = 0; i < ingredientsToFind.length; i++) {
+            let ingredient = await Ingredients.find({
                 where: {
-                    name: ingredient
+                    name: ingredientsToFind[i]
                 }
             })
-            if (data) {
-                accum.push(data);
+            if (ingredient) {
+                ingredientsData.push(ingredient);
             }
-            return accum;
-        }, []);
-        res.json(ingredientsData)
+        }
+        // const ingredientsData = ingredientsToFind.reduce(async (accum, ingredient) => {
+        //     const data = await Ingredients.findOne({
+        //         where: {
+        //             name: ingredient
+        //         }
+        //     })
+        //     if (data) {
+        //         accum.push(data);
+        //     }
+        //     return accum;
+        // }, []);
+        res.json({ingredientsData})
     } catch (error) {
         next(error);
     }
