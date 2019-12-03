@@ -35,7 +35,6 @@ router.post('/', async (req, res, next) => {
 
 router.put('/update', async (req, res, next) => {
   try {
-    console.log('server rating', req.body.rating)
    await ProductReviews.update(
     { rating: req.body.rating }, 
     {
