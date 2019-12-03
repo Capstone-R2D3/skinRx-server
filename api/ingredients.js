@@ -1,19 +1,18 @@
 const {Ingredients} = require('../models/associations');
 const router = require('express').Router();
 
-// router.get('/', async (req, res, next) => {
-//     try {
-//         const ingredients = await Ingredients.findAll();
-//         res.json(ingredients);
-//     } catch (error) {
-//         next(error);
-//     }
-// })
+router.get('/', async (req, res, next) => {
+    try {
+        const ingredients = await Ingredients.findAll();
+        res.json(ingredients);
+    } catch (error) {
+        next(error);
+    }
+})
 
 router.post('/', async (req, res, next) => {
     try {
         const ingredientsToFind = req.body.ingredients;
-        console.log('INGREDIENTS TO FIND: ', ingredientsToFind);
         let ingredientsData = [];
         for (let i = 0; i < ingredientsToFind.length; i++) {
             let ingredient = await Ingredients.find({
@@ -36,7 +35,7 @@ router.post('/', async (req, res, next) => {
         //     }
         //     return accum;
         // }, []);
-        res.json({ingredientsData})
+        res.json(ingredientsData)
     } catch (error) {
         next(error);
     }
