@@ -15,7 +15,7 @@ router.post('/', async (req, res, next) => {
         const ingredientsToFind = req.body.ingredients;
         let ingredientsData = [];
         for (let i = 0; i < ingredientsToFind.length; i++) {
-            let ingredient = await Ingredients.find({
+            let ingredient = await Ingredients.findOne({
                 where: {
                     name: ingredientsToFind[i]
                 }
