@@ -12,7 +12,7 @@ const router = require('express').Router();
 
 router.post('/', async (req, res, next) => {
     try {
-        const {ingredientsToFind} = req.body.ingredients;
+        const ingredientsToFind = req.body.ingredients;
         console.log('INGREDIENTS TO FIND: ', ingredientsToFind);
         let ingredientsData = [];
         for (let i = 0; i < ingredientsToFind.length; i++) {
