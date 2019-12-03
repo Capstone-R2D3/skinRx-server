@@ -12,6 +12,7 @@ router.get('/', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
     try {
+        console.log('req body: ', req.body)
         const ingredientsToFind = req.body.ingredients;
         console.log('ingredients to find: ', ingredientsToFind)
         console.log('hello?')
