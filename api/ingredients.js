@@ -10,7 +10,7 @@ const router = require('express').Router();
 //     }
 // })
 
-router.get('/', (req, res, next) => {
+router.post('/', (req, res, next) => {
     try {
         const { ingredientsToFind } = req.body;
         const ingredientsData = ingredientsToFind.reduce(async (accum, ingredient) => {
