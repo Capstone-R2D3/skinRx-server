@@ -10,12 +10,12 @@ const seedTypes = [
   { name: 'Sensitive' }
 ]
 
-const seedUsers = [
-  { firstName: 'Andi', lastName: 'Plummer', email: 'andi@gmail.com', password: '1234'},
-  { firstName: 'Grace', lastName: 'Chung', email: 'grace@gmail.com', password: '1234'},
-  { firstName: 'Athena', lastName: 'Chen', email: 'athena@gmail.com', password: '1234'},
-  { firstName: 'Sylvana', lastName: 'Santos', email: 'sylvana@gmail.com', password: '1234'},
-]
+// const seedUsers = [
+//   { firstName: 'Andi', lastName: 'Plummer', email: 'andi@gmail.com', password: '1234'},
+//   { firstName: 'Grace', lastName: 'Chung', email: 'grace@gmail.com', password: '1234'},
+//   { firstName: 'Athena', lastName: 'Chen', email: 'athena@gmail.com', password: '1234'},
+//   { firstName: 'Sylvana', lastName: 'Santos', email: 'sylvana@gmail.com', password: '1234'},
+// ]
 
 // const seedReviews = [
 //   { userId: 1, productId: 1, rating: 5 },
@@ -36,7 +36,7 @@ async function seed() {
    try {
        await db.sync({force: true})
        await SkinTypes.bulkCreate(seedTypes)
-       await Users.bulkCreate(seedUsers)
+      //  await Users.bulkCreate(seedUsers)
       //  await ProductReviews.bulkCreate(seedReviews)
        await JourneyEntries.bulkCreate(seedJourneyEntries)
        await db.close()
