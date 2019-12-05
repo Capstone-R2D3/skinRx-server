@@ -22,6 +22,14 @@ const JourneyEntries = db.define('journeyEntries', {
     },
     description: {
         type: Sequelize.TEXT
+    },
+    status: {
+        type: Sequelize.INTEGER,
+        validate: {
+            isInt: true,
+            max: 3,
+            min: 1
+        }
     }
 })
 
