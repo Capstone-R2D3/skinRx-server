@@ -21,6 +21,10 @@ const Recommendations = db.define('recommendations', {
     serum: {
         type: Sequelize.INTEGER,
         allowNull: false,
+    }, 
+    userId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
     }
 })
 

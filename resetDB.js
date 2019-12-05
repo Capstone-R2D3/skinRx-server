@@ -11,10 +11,10 @@ const seedTypes = [
 ]
 
 const seedUsers = [
-  { firstName: 'Andi', lastName: 'Plummer', email: 'andi@gmail.com', password: '1234', skinTypeId: 1},
-  { firstName: 'Grace', lastName: 'Chung', email: 'grace@gmail.com', password: '1234', skinTypeId: 2},
-  { firstName: 'Athena', lastName: 'Chen', email: 'athena@gmail.com', password: '1234', skinTypeId: 3},
-  { firstName: 'Sylvana', lastName: 'Santos', email: 'sylvana@gmail.com', password: '1234', skinTypeId: 4},
+  { firstName: 'Andi', lastName: 'Plummer', skinTypeId: 1, email: 'andi@gmail.com', password: '1234'},
+  { firstName: 'Grace', lastName: 'Chung',  skinTypeId: 1, email: 'grace@gmail.com', password: '1234'},
+  { firstName: 'Athena', lastName: 'Chen', skinTypeId: 1, email: 'athena@gmail.com', password: '1234'},
+  { firstName: 'Sylvana', lastName: 'Santos', skinTypeId: 1, email: 'sylvana@gmail.com', password: '1234'},
 ]
 
 // const seedReviews = [
