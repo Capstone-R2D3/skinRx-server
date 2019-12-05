@@ -209,6 +209,41 @@ router.post('/:userId', async(req, res, next) => {
     }
 })
 
+router.put('/:userId', async(req, res, next) => {
+  try {
+      const user = await Users.findByPk(req.params.userId);
+      
+      // ***** CHANGE THIS BACK LATER! Req.body when running from heroku, but user.SkinTypeId when from local host *****
+      // const skinTypeId = req.body.skinTypeId
+      const skinTypeId = user.skinTypeId;    
+
+      const cleanser = await Products.findAll({where: {category: 'Cleanser', skinTypeId}, limit: 1});
+      const toner = await Products.findAll({where: {category: 'Toner', skinTypeId}, limit:1});
+      const moisturizer = await Products.findAll({where: {category: 'Moisturizer', skinTypeId}, limit:1});
+      const serum = await Products.findAll({where: {category: 'Serum', skinTypeId}, limit:1});
+
+      try {
+        await Recommendations.update(
+          {
+          cleanser: cleanser[0].id, 
+          toner: toner[0].id, 
+          moisturizer: moisturizer[0].id, 
+          serum: serum[0].id, 
+          userId: req.params.userId
+          }, 
+          {
+            where: { userId: req.params.userId }
+          }
+          )
+        res.json({cleanser, toner, moisturizer, serum })
+      } catch (error) {
+        next(error)
+      }
+  } catch(error) {
+      next(error)
+  }
+})
+
 module.exports = router;
 
 
