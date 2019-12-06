@@ -97,9 +97,7 @@ router.put('/update/:userId', async(req, res, next) => {
       const toner = await Products.findAll({where: {category: 'Toner', skinTypeId}, limit:1});
       const moisturizer = await Products.findAll({where: {category: 'Moisturizer', skinTypeId}, limit:1});
       const serum = await Products.findAll({where: {category: 'Serum', skinTypeId}, limit:1});
-
-      console.log('cleanser', cleanser)
-
+      
       try {
         await Recommendations.update(
           {

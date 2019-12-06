@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const JourneyEntries = require('../models/journey-entries')
 
-router.get('/users/:userId/entries/:date', async (req, res, next) => {
+router.get('/:userId/entries/:date', async (req, res, next) => {
     try {
       // const dateStr = req.params.date.split("-")
       // let newDate = `${dateStr[1]}/${dateStr[1]}/${dateStr[0]}`
