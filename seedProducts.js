@@ -44,11 +44,11 @@ function scrapeProducts(url, category) {
           const productPage = cheerio.load(b);
           const name = productPage(".product-name").text();
           let imageUrl = productPage(".product-image").children("img").attr("src")
-          // let score = String(productPage(".product-score").children("img").attr("src")).substring(52, 54);
-          // if(score === "ve") score = 01;
-          // else {
-          //   score = Number(score)
-          // }
+          let score = String(productPage(".product-score").children("img").attr("src")).substring(52, 54);
+          if(score === "ve") score = 01;
+          else {
+            score = Number(score)
+          }
           const ingredients = [];
           productPage(".table-ingredient-concerns")
             .find("tr")
@@ -69,7 +69,7 @@ function scrapeProducts(url, category) {
               ).substring(52, 54);
               ingredients.push(`${ingredientName} : ${ingredientScore}`);
             });
-          Products.create({ brand, name, ingredients, category, skinTypeId, imageUrl});
+          Products.create({ brand, name, ingredients, category, skinTypeId, imageUrl, score});
         }
       });
     });
