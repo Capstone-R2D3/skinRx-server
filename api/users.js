@@ -87,7 +87,8 @@ router.post('/users/:id/entries', upload.array('entryImages'), async (req, res, 
       imageUrls: imageUrlsArray,
       stressLevel: Number(req.body.stressLevel),
       diet: req.body.diet,
-      description: req.body.description
+      description: req.body.description,
+      status: req.body.status
     }
     const newEntry = await JourneyEntries.create(newEntryInfo);
     res.send(newEntry);
@@ -140,7 +141,8 @@ router.put('/users/:userId/entries/:entryId', upload.array('entryImages'), async
       imageUrls: imageUrlsArray,
       stressLevel: Number(req.body.stressLevel),
       diet: req.body.diet,
-      description: req.body.description
+      description: req.body.description,
+      status: req.body.status
     }
     const [numRows, rows] = await JourneyEntries.update(updatedEntryInfo, {
       where: {
