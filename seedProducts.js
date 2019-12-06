@@ -14,8 +14,8 @@ const links = [
   "https://www.ewg.org/skindeep/browse/category/Facial_moisturizer__treatment?page=3&per_page=36",
   "https://www.ewg.org/skindeep/browse/category/Facial_moisturizer__treatment?page=17&per_page=36",
   "https://www.ewg.org/skindeep/browse/category/Serums_&_Essences?page=5&per_page=36",
-  "https://www.ewg.org/skindeep/browse/category/Serums_&_Essences?page=10&per_page=36",
-  "https://www.ewg.org/skindeep/browse/category/Serums_&_Essences?page=16&per_page=36",
+  "https://www.ewg.org/skindeep/browse/category/Serums_&_Essences?page=11&per_page=36",
+  "https://www.ewg.org/skindeep/browse/category/Serums_&_Essences?page=15&per_page=36",
   "https://www.ewg.org/skindeep/browse/category/Mask?page=4&per_page=36",
   "https://www.ewg.org/skindeep/browse/category/Mask?page=6&per_page=36",
   "https://www.ewg.org/skindeep/browse/category/Mask?page=12&per_page=36"
@@ -36,6 +36,13 @@ function scrapeProducts(url, category) {
         .find(".product-name")
         .children("a")
         .attr("href");
+      // const score = String($(element)
+      //   .find(".product-score")
+      //   .children("img")
+      //   .attr("src"))
+
+      console.log(productUrl)
+      // console.log('new score is', score)
 
       request(productUrl, (err, res, b) => {
         if (err) {
@@ -87,9 +94,10 @@ links.forEach((link, index) => {
     category = "Moisturizer";
   } else if (index > 8 && index < 12) {
     category = "Serum";
-  } else if (index > 11) {
-    category = "Mask";
-  }
+  } 
+  // else if (index > 11) {
+  //   category = "Mask";
+  // }
 
   scrapeProducts(link, category);
 });
