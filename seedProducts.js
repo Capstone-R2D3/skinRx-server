@@ -94,8 +94,7 @@ links.forEach((link, index) => {
     category = "Moisturizer";
   } else if (index > 8 && index < 12) {
     category = "Serum";
-  } 
-  else if (index > 11) {
+  } else if (index > 11) {
     category = "Mask";
   }
 
