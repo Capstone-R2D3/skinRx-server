@@ -51,8 +51,8 @@ function scrapeProducts(url, category) {
           const productPage = cheerio.load(b);
           const name = productPage(".product-name").text();
           let imageUrl = productPage(".product-image").children("img").attr("src")
-          let score = String(productPage(".product-score").children("img").attr("src")).substring(52, 54);
-          if(score === "ve") score = 01;
+          let score = String(productPage(".product-score").children("img").attr("src")).substring(53, 54);
+          if(score === "e") score = 1;
           else {
             score = Number(score)
           }
