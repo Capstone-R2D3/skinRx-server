@@ -36,6 +36,13 @@ function scrapeProducts(url, category) {
         .find(".product-name")
         .children("a")
         .attr("href");
+      // const score = String($(element)
+      //   .find(".product-score")
+      //   .children("img")
+      //   .attr("src"))
+
+      // console.log(productUrl)
+      // console.log('new score is', score)
 
       request(productUrl, (err, res, b) => {
         if (err) {
