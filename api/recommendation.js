@@ -1,5 +1,7 @@
 const { Users, Products, ProductReviews, Recommendations } = require('../models/associations');
 const router = require('express').Router();
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 
 // finds similarity score between the two users 
@@ -70,7 +72,13 @@ router.get('/:userId', async(req, res, next) => {
     console.log('found user')
     if(user) {
       const currentRecs = await Recommendations.findAll({where: { userId: req.params.userId } })
-      res.send(currentRecs[0])
+      
+      const cleanser = await Products.findByPk(currentRecs[0].cleanser)
+      const toner = await Products.findByPk(currentRecs[0].toner)
+      const moisturizer = await Products.findByPk(currentRecs[0].moisturizer)
+      const serum = await Products.findByPk(currentRecs[0].serum)
+
+      res.send({cleanser, toner, moisturizer, serum})
     } else {
       res.status(404).send('Could not find user')
     }
@@ -79,65 +87,120 @@ router.get('/:userId', async(req, res, next) => {
   }
 })
 
+router.put('/update/:userId', async(req, res, next) => {
+  try {
+      const user = await Users.findByPk(req.params.userId);
+      
+      const skinTypeId = user.skinTypeId;    
+
+      const cleanser = await Products.findAll({where: {category: 'Cleanser', skinTypeId}, limit: 1});
+      const toner = await Products.findAll({where: {category: 'Toner', skinTypeId}, limit:1});
+      const moisturizer = await Products.findAll({where: {category: 'Moisturizer', skinTypeId}, limit:1});
+      const serum = await Products.findAll({where: {category: 'Serum', skinTypeId}, limit:1});
+      
+      try {
+        await Recommendations.update(
+          {
+          cleanser: cleanser[0].id, 
+          toner: toner[0].id, 
+          moisturizer: moisturizer[0].id, 
+          serum: serum[0].id, 
+          userId: req.params.userId
+          }, 
+          {
+            where: { userId: req.params.userId }
+          }
+          )
+        res.json({cleanser, toner, moisturizer, serum })
+      } catch (error) {
+        next(error)
+      }
+  } catch(error) {
+      next(error)
+  }
+})
 
 
-// update recommendations for each product when a rating has been submitted 
-// things to consider: getting for each product - can we get the product category from the front end 
-// and send it to this router?
-// will need to use euclidean distance from here - first randomly select a person with a similar skin type 
-// then feed into the equation. Similar score? then filter through the second person's recommendations from the same 
-// category and give them that item if it is rated over a four. Otherwise, look for another person
+
 router.put('/:userId', async(req, res, next) => {
   try {
     
+    console.log('MADE IT TO THE BACK END!', req.body.category, req.body.productId, req.body.skinTypeId)
+
     // will be passed in through the product card in the body
+    // do we need skintypeId since each product is only tied to a specific skin type currently?
     const category = req.body.category; 
     const productId = req.body.productId;
     const skinTypeId = req.body.skinTypeId;
     // const user1Rating = req.body.rating;
     const user1Rating = 4
 
-    const similarRecs = await ProductReviews.findAll({ where: { productId: productId }, limit: 5 })
+    const similarRecs = await ProductReviews.findAll({ where: { productId: productId, userId: {[Op.not]: req.params.userId} }, limit: 5 })
 
-    const user1Products = await ProductReviews.findAll({where: {userId: req.params.userId}})
-    let user2Products
-    let recommendProds = []
+    // console.log('similarRecs', similarRecs.data)
 
-    for(let i = 1; i < similarRecs.length; i++) {
-      user2Products = await ProductReviews.findAll({where: {userId: similarRecs[i].userId}})
-      let match = getSameReviews(user1Products, user2Products)[0]
+    async function findAndSend() {
+        let newName = category.slice(0,1).toUpperCase() + category.slice(1)
+        const newProduct = await Products.findAll({where: {category: newName, skinTypeId: req.body.skinTypeId}});
+
+        const randomGenerator = Math.round(Math.random() * newProduct.length)
+        let see = newProduct[randomGenerator]
+
+        if(category.toLowerCase() === 'cleanser') await Recommendations.update({cleanser: see.id}, {where: { userId: req.params.userId } });
+        else if(category.toLowerCase() === 'toner') await Recommendations.update({toner: see.id}, {where: { userId: req.params.userId } });
+        else if(category.toLowerCase() === 'serum') await Recommendations.update({serum: see.id}, {where: { userId: req.params.userId } });
+        else if(category.toLowerCase() === 'moisturizer') await Recommendations.update({moisturizer: see.id}, {where: { userId: req.params.userId } });
+        
+        let newRecommendation = await Products.findByPk(see.id)
+        console.log('made a new rec!!!')
+  
+        res.send(newRecommendation)
+    }
+
+
+    if(similarRecs.length === 0) {
+        findAndSend()
+    } else {
+      const user1Products = await ProductReviews.findAll({where: {userId: req.params.userId}})
+      let user2Products
+      let recommendProds = []
       
-      console.log(match)
+
+      for(let i = 0; i < similarRecs.length; i++) {
+        user2Products = await ProductReviews.findAll({where: {userId: similarRecs[i].userId}})
+        let match = getSameReviews(user1Products, user2Products)[0]
       
-      if(match >= 0.35) {
-        let remainingArr = getSameReviews(user1Products, user2Products)[1];
-        for(let i = 0; i < remainingArr.length; i++) {
-          if(remainingArr[i].rating > 3) recommendProds.push(remainingArr[i].productId);
+
+        if(match < 0.35) {
+          findAndSend()
+        }
+        if(match >= 0.35) {
+          let remainingArr = getSameReviews(user1Products, user2Products)[1];
+          for(let i = 0; i < remainingArr.length; i++) {
+            if(remainingArr[i].rating > 3) recommendProds.push(remainingArr[i].productId);
+          }
         }
       }
-    }
 
-    console.log(recommendProds)
-    
+      for(let i = 0; i < recommendProds.length; i++) {
+        let productsToRecommend = await Products.findByPk(recommendProds[i]);
+      
+        // DEF NEED TO REFACTOR THIS BIT - DOES ANYONE KNOW IF I CAN JUST PASS IN A VARIABLE 
+        // IN PLACE OF THE ACTUAL COLUMN NAME? THAT WOULD MAKE IT MUCH CLEANER!!!!!
+        if(productsToRecommend['category'].toLowerCase() === category) {
+          if(category === 'cleanser') await Recommendations.update({cleanser: recommendProds[i]}, {where: { userId: req.params.userId } });
+          else if(category === 'toner') await Recommendations.update({toner: recommendProds[i]}, {where: { userId: req.params.userId } });
+          else if(category === 'serum') await Recommendations.update({serum: recommendProds[i]}, {where: { userId: req.params.userId } });
+          else if(category === 'moisturizer') await Recommendations.update({moisturizer: recommendProds[i]}, {where: { userId: req.params.userId } });
+        
+          let newRecommendation = await Products.findByPk(recommendProds[i])
+          console.log('made it to the end & updated!')
 
-    for(let i = 0; i < recommendProds.length; i++) {
-      let productsToRecommend = await Products.findByPk(recommendProds[i]);
-      
-      console.log(productsToRecommend.category)
-      
-      // DEF NEED TO REFACTOR THIS BIT - DOES ANYONE KNOW IF I CAN JUST PASS IN A VARIABLE 
-      // IN PLACE OF THE ACTUAL COLUMN NAME? THAT WOULD MAKE IT MUCH CLEANER!!!!!
-      if(productsToRecommend['category'] === category) {
-        if(category === 'Cleanser') await Recommendations.update({cleanser: recommendProds[i]}, {where: { userId: req.params.userId } });
-        else if(category === 'Toner') await Recommendations.update({toner: recommendProds[i]}, {where: { userId: req.params.userId } });
-        else if(category === 'Serum') await Recommendations.update({serum: recommendProds[i]}, {where: { userId: req.params.userId } });
-        else if(category === 'Moisturizer') await Recommendations.update({moisturizer: recommendProds[i]}, {where: { userId: req.params.userId } });
+          res.send(newRecommendation)
+        }
       }
+
     }
-
-    let newRecommendations = await Recommendations.findByPk(req.params.userId)
-
-    res.send(newRecommendations)
 
   } catch(error) {
     next(error)
@@ -178,38 +241,7 @@ router.post('/:userId', async(req, res, next) => {
     }
 })
 
+
 module.exports = router;
 
 
-
-
-// router.put('/:userId', async(req, res, next) => {
-//   try {
-    
-//     // will be passed in through the product card in the body
-//     const category = req.body.category; 
-//     const productId = req.body.productId;
-//     const skinTypeId = req.body.skinTypeId;
-//     // const user1Rating = req.body.rating;
-//     const user1Rating = 4
-
-//     const similarRecs = await ProductReviews.findAll({ where: { productId: productId }, limit: 5 })
-    
-//     const user1Products = await ProductReviews.findAll({where: {userId: req.params.userId}})
-//     const user2Products = await ProductReviews.findAll({where: {userId: similarRecs[1].userId}})
-
-//     let match = getSameReviews(user1Products, user2Products)    
-
-//     // if match is above this score then give back other recommendations from user 2 with high ratings
-//     if (match > 0.40) {
-
-//     } else {
-
-//     }
-
-//     res.send({user1Products, user2Products})
-
-//   } catch(error) {
-//     next(error)
-//   }
-// })

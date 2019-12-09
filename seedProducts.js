@@ -36,6 +36,13 @@ function scrapeProducts(url, category) {
         .find(".product-name")
         .children("a")
         .attr("href");
+      // const score = String($(element)
+      //   .find(".product-score")
+      //   .children("img")
+      //   .attr("src"))
+
+      // console.log(productUrl)
+      // console.log('new score is', score)
 
       request(productUrl, (err, res, b) => {
         if (err) {
@@ -44,6 +51,11 @@ function scrapeProducts(url, category) {
           const productPage = cheerio.load(b);
           const name = productPage(".product-name").text();
           let imageUrl = productPage(".product-image").children("img").attr("src")
+          let score = String(productPage(".product-score").children("img").attr("src")).substring(53, 54);
+          if(score === "e") score = 1;
+          else {
+            score = Number(score)
+          }
           const ingredients = [];
           productPage(".table-ingredient-concerns")
             .find("tr")
@@ -64,7 +76,7 @@ function scrapeProducts(url, category) {
               ).substring(52, 54);
               ingredients.push(`${ingredientName} : ${ingredientScore}`);
             });
-          Products.create({ brand, name, ingredients, category, skinTypeId, imageUrl });
+          Products.create({ brand, name, ingredients, category, skinTypeId, imageUrl, score});
         }
       });
     });
